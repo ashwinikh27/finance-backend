@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const recordRoutes = require("./routes/recordRoutes");
+
 
 const app = express();
 connectDB();
@@ -9,6 +11,7 @@ connectDB();
 // Middleware to parse JSON
 app.use(express.json());
 app.use("/api/users", userRoutes);
+app.use("/api/records", recordRoutes);
 
 // Test route
 app.get("/", (req, res) => {
