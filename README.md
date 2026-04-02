@@ -1,4 +1,4 @@
-# Finance Data Processing & Access Control Backend
+# 💰 Finance Data Processing & Access Control Backend
 
 ## 📌 Overview
 This project is a backend system for a finance dashboard that helps manage users, track financial records, and generate useful insights. It also includes role-based access control to ensure that different users can only perform actions they are allowed to.
@@ -113,10 +113,3 @@ role: viewer
 * Prevents duplicate user emails
 * Returns appropriate HTTP status codes
 
----
-
-## 👩‍💻 Author
-
-Ashwini Hegde
-
-```
