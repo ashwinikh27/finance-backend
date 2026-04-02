@@ -3,7 +3,23 @@ const Record = require("../models/Record");
 // Create Record
 exports.createRecord = async (req, res) => {
   try {
+    const { amount, type, category } = req.body;
+
+    // Basic validation
+    if (!amount || !type || !category) {
+      return res.status(400).json({
+        message: "Amount, type and category are required",
+      });
+    }
+
+    if (!["income", "expense"].includes(type)) {
+      return res.status(400).json({
+        message: "Type must be income or expense",
+      });
+    }
+
     const record = await Record.create(req.body);
+
     res.status(201).json(record);
   } catch (error) {
     res.status(400).json({ message: error.message });
