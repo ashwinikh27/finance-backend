@@ -26,3 +26,38 @@ exports.getSummary = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getCategoryTotals = async (req, res) => {
+  try {
+    const result = await Record.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getMonthlyTrends = async (req, res) => {
+  try {
+    const result = await Record.aggregate([
+      {
+        $group: {
+          _id: { month: { $month: "$date" } },
+          total: { $sum: "$amount" },
+        },
+      },
+      { $sort: { "_id.month": 1 } },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
