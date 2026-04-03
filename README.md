@@ -23,7 +23,7 @@ This project is a backend system for a finance dashboard that helps manage users
 - Category-wise breakdown
 - Monthly trends
 
-### 🔐 Role-Based Access Control (RBAC)
+### 🔐 Role-Based Access Control 
 - **Admin** → Full access (create, read, update, delete)
 - **Analyst** → Can view records and analytics
 - **Viewer** → Restricted access (no modifications allowed)
@@ -73,6 +73,7 @@ npm run dev
 
 * **POST** `/api/users` → Create a user
 * **GET** `/api/users` → Fetch all users
+* **POST** `/api/users/login` → Authenticate user and get token
 
 ### 💸 Records
 
@@ -86,24 +87,30 @@ npm run dev
 * **GET** `/api/dashboard/trends` → Monthly trends
 
 ---
+## 🔐 Authentication & Access Control
 
-## 🔑 Role-Based Access
+- JWT-based authentication is implemented
+- Users log in and receive a token
+- Protected routes require a valid token
 
-Pass the user role in request headers:
+### 🔑 How to use
 
-```
-role: admin
-role: analyst
-role: viewer
-```
+Add token in request headers:
 
+Authorization: Bearer <your_token>
+
+### 👥 Role-Based Access Control (RBAC)
+
+- **Admin** → Full access (create, update, delete)
+- **Analyst** → Can view records and analytics
+- **Viewer** → Restricted access
 ---
 
 ## ⚠️ Assumptions
 
-* Authentication is simulated using request headers
-* Role-based access is handled using middleware
-* MongoDB Atlas is used for data storage
+- JWT is used for authentication
+- Role-based access is handled using middleware
+- MongoDB Atlas is used for data storage
 
 ---
 
