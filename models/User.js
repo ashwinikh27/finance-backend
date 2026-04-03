@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
+    password: {
+  type: String,
+  required: true,
+}
+
   },
   { timestamps: true }
 );
