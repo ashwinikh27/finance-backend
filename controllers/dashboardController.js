@@ -61,3 +61,15 @@ exports.getMonthlyTrends = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getRecentActivity = async (req, res) => {
+  try {
+    const records = await Record.find()
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    res.status(200).json(records);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

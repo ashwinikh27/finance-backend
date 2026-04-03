@@ -1,13 +1,43 @@
 const express = require("express");
 const router = express.Router();
 
-const { getSummary, getCategoryTotals,
-  getMonthlyTrends} = require("../controllers/dashboardController");
-const { authorizeRoles } = require("../middleware/authMiddleware");
+const {
+  getSummary,
+  getCategoryTotals,
+  getMonthlyTrends,
+  getRecentActivity,
+} = require("../controllers/dashboardController");
 
-router.get("/summary", authorizeRoles("admin", "analyst"), getSummary);
+const { authenticate, authorizeRoles } = require("../middleware/authMiddleware");
 
-router.get("/categories", authorizeRoles("admin", "analyst"), getCategoryTotals);
-router.get("/trends", authorizeRoles("admin", "analyst"), getMonthlyTrends);
+// Protect all routes with authenticate first
+
+router.get(
+  "/summary",
+  authenticate,
+  authorizeRoles("admin", "analyst"),
+  getSummary
+);
+
+router.get(
+  "/categories",
+  authenticate,
+  authorizeRoles("admin", "analyst"),
+  getCategoryTotals
+);
+
+router.get(
+  "/trends",
+  authenticate,
+  authorizeRoles("admin", "analyst"),
+  getMonthlyTrends
+);
+
+router.get(
+  "/recent",
+  authenticate,
+  authorizeRoles("admin", "analyst"),
+  getRecentActivity
+);
 
 module.exports = router;
