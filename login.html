@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<!--<body class="bg-gradient-to-br from-blue-200 via-indigo-100 to-blue-300 flex items-center justify-center h-screen">-->
+<body class="bg-gradient-to-br from-emerald-200 via-teal-100 to-green-300 flex items-center justify-center h-screen">
+  <div class="relative">
+
+  <!-- Glow effect -->
+  <div class="absolute -inset-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl blur opacity-25"></div>
+
+  <!-- Card -->
+  <div class="relative bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-96 border border-gray-200 hover:scale-[1.01] transition">
+
+    <!-- Title -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Welcome back</h1>
+      <p class="text-gray-500 text-sm">Login to continue</p>
+    </div>
+
+    <!-- Inputs -->
+    <div class="space-y-4">
+
+      <input id="email" placeholder="Email"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-green-400 focus:shadow-md outline-none transition duration-200">
+
+      <input id="password" type="password" placeholder="Password"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-green-400 focus:shadow-md outline-none transition duration-200">
+
+    </div>
+
+    <!-- Button -->
+    <button onclick="login()"
+      class="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white p-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition duration-200">
+      Login
+    </button>
+
+    <!-- Link -->
+    <p class="text-center text-sm text-gray-600 mt-5">
+      Don’t have an account?
+      <a href="index.html" class="text-green-600 font-medium hover:underline">
+        Register
+      </a>
+    </p>
+
+  </div>
+
+</div>
+
+<div id="toast" class="fixed top-5 right-5 hidden px-4 py-2 rounded-lg text-white shadow-lg"></div>
+
+<script>
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showToast("Email and password are required", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showToast(data.message, "error");
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+
+    showToast("Login successful!");
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 1000);
+
+  } catch (err) {
+    showToast("Server error", "error");
+  }
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+
+  toast.className = "fixed top-5 right-5 px-4 py-2 rounded-lg text-white shadow-lg";
+
+  toast.classList.add(type === "error" ? "bg-red-500" : "bg-green-500");
+
+  toast.classList.remove("hidden");
+
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+</script>
+
+</body>
+</html>

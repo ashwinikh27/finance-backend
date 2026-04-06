@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-200 via-indigo-100 to-blue-300 flex items-center justify-center h-screen">
+
+<div class="relative">
+
+  <!-- Glow -->
+  <div class="absolute -inset-1 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl blur opacity-25"></div>
+
+  <!-- Card -->
+  <div class="relative bg-white/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl w-96 border border-gray-200 hover:scale-[1.01] transition">
+
+    <!-- Title -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Create account</h1>
+      <p class="text-gray-500 text-sm">Start managing your finances</p>
+    </div>
+
+    <!-- Inputs -->
+    <div class="space-y-4">
+
+      <input id="name" placeholder="Full Name"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-blue-400 focus:shadow-md outline-none transition">
+
+      <input id="email" placeholder="Email"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-blue-400 focus:shadow-md outline-none transition">
+
+      <input id="password" type="password" placeholder="Password"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-blue-400 focus:shadow-md outline-none transition">
+
+      <select id="role"
+        class="w-full p-3 border rounded-lg bg-white/90 focus:ring-2 focus:ring-blue-400 focus:shadow-md outline-none transition">
+        <option value="admin">Admin</option>
+        <option value="analyst">Analyst</option>
+        <option value="viewer">Viewer</option>
+      </select>
+
+    </div>
+
+    <!-- Button -->
+    <button onclick="register()"
+      class="w-full mt-6 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white p-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition duration-200">
+      Create Account
+    </button>
+
+    <!-- Link -->
+    <p class="text-center text-sm text-gray-600 mt-5">
+      Already have an account?
+      <a href="login.html" class="text-blue-600 font-medium hover:underline">
+        Login
+      </a>
+    </p>
+
+  </div>
+
+</div>
+
+<div id="toast" class="fixed top-5 right-5 hidden px-4 py-2 rounded-lg text-white shadow-lg"></div>
+
+<script>
+async function register() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const role = document.getElementById("role").value;
+
+  if (!name || !email || !password) {
+    showToast("All fields are required", "error");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5000/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password, role })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast("Registered successfully!");
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1000);
+    } else {
+      showToast(data.message, "error");
+    }
+
+  } catch (err) {
+    showToast("Server error", "error");
+  }
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+
+  toast.className = "fixed top-5 right-5 px-4 py-2 rounded-lg text-white shadow-lg";
+
+  toast.classList.add(type === "error" ? "bg-red-500" : "bg-green-500");
+
+  toast.classList.remove("hidden");
+
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+</script>
+
+</body>
+</html>

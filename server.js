@@ -4,13 +4,14 @@ const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const recordRoutes = require("./routes/recordRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-
+const cors = require("cors");
 
 const app = express();
 connectDB();
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(cors());
 app.use("/api/users", userRoutes);
 app.use("/api/records", recordRoutes);
 app.use("/api/dashboard", dashboardRoutes);

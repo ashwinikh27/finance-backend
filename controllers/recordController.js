@@ -4,16 +4,18 @@ const Record = require("../models/Record");
 exports.createRecord = async (req, res) => {
   try {
     const { amount, type, category } = req.body;
-    const userId = req.headers.userid;
+    const userId = req.user.id; // ✅ from JWT
 
-    if (!amount || !type || !category || !userId) {
+    if (!amount || !type || !category) {
       return res.status(400).json({
-        message: "Amount, type, category and userId are required",
+        message: "Amount, type and category are required",
       });
     }
 
     const record = await Record.create({
-      ...req.body,
+      amount,
+      type,
+      category,
       user: userId,
     });
 
@@ -26,11 +28,9 @@ exports.createRecord = async (req, res) => {
 // Get Records (with filters)
 exports.getRecords = async (req, res) => {
   try {
-    const userId = req.headers.userid;
+    const userId = req.user.id; // ✅
 
-    let filter = { user: userId };
-
-    const records = await Record.find(filter);
+    const records = await Record.find({ user: userId });
 
     res.status(200).json(records);
   } catch (error) {

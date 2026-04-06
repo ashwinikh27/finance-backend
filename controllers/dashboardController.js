@@ -1,8 +1,9 @@
 const Record = require("../models/Record");
 
+// 📊 SUMMARY
 exports.getSummary = async (req, res) => {
   try {
-    const records = await Record.find();
+    const records = await Record.find({ user: req.user.id }); // ✅ FIXED
 
     let totalIncome = 0;
     let totalExpense = 0;
@@ -27,9 +28,13 @@ exports.getSummary = async (req, res) => {
   }
 };
 
+// 📊 CATEGORY TOTALS
 exports.getCategoryTotals = async (req, res) => {
   try {
     const result = await Record.aggregate([
+      {
+        $match: { user: req.user.id }, // ✅ FIXED
+      },
       {
         $group: {
           _id: "$category",
@@ -44,9 +49,13 @@ exports.getCategoryTotals = async (req, res) => {
   }
 };
 
+// 📊 MONTHLY TRENDS
 exports.getMonthlyTrends = async (req, res) => {
   try {
     const result = await Record.aggregate([
+      {
+        $match: { user: req.user.id }, // ✅ FIXED
+      },
       {
         $group: {
           _id: { month: { $month: "$date" } },
@@ -62,9 +71,10 @@ exports.getMonthlyTrends = async (req, res) => {
   }
 };
 
+// 📊 RECENT ACTIVITY (already correct)
 exports.getRecentActivity = async (req, res) => {
   try {
-    const records = await Record.find()
+    const records = await Record.find({ user: req.user.id })
       .sort({ createdAt: -1 })
       .limit(5);
 
